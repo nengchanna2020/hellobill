@@ -31,7 +31,9 @@
       "Bash(*DROP TABLE*)",
       "Bash(*drop table*)",
       "Bash(curl *)",
-      "Bash(wget *)"
+      "Bash(wget *)",
+      "Edit(/.claude/hooks/**)",
+      "Edit(/.claude/settings.json)"
     ]
   },
   "sandbox": {
@@ -58,5 +60,66 @@
         "services.gradle.org"
       ]
     }
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-context.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-secrets.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format-on-edit.sh",
+            "timeout": 120
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/run-related-tests.sh",
+            "timeout": 300
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/require-green-tests.sh",
+            "timeout": 600
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude Code needs you\" with title \"HelloBill\"' 2>/dev/null || notify-send HelloBill 'Claude Code needs you' 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
   }
 }
