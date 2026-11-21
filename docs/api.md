@@ -10,6 +10,7 @@ form errors: 400 for bad input, 404 when something doesn't exist.
 | GET | `/api/customers/{id}` | one customer | `curl localhost:8080/api/customers/1` |
 | POST | `/api/customers` | add a customer (201) | `{"name": "Maple Studio", "email": "a@example.com", "country": "CA", "currency": "CAD"}` |
 | PUT | `/api/customers/{id}` | change a customer | same body as POST |
+| GET | `/api/customers/{id}/payments` | payments on a customer's invoices, newest first | `curl localhost:8080/api/customers/1/payments` |
 | GET | `/api/dashboard` | totals for the home page | `curl localhost:8080/api/dashboard` |
 | GET | `/api/invoices` | invoices, newest first (`?status=` and `?customerId=` filter) | `curl localhost:8080/api/invoices?status=SENT` |
 | GET | `/api/invoices/{id}` | one invoice with items and totals | `curl localhost:8080/api/invoices/1` |

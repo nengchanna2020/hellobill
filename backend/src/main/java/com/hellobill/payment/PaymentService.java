@@ -1,6 +1,7 @@
 package com.hellobill.payment;
 
 import com.hellobill.common.BadRequestException;
+import com.hellobill.customer.CustomerService;
 import com.hellobill.invoice.Invoice;
 import com.hellobill.invoice.InvoiceCalculator;
 import com.hellobill.invoice.InvoiceResponse;
@@ -18,11 +19,14 @@ public class PaymentService {
 
   private final PaymentRepository payments;
   private final InvoiceService invoices;
+  private final CustomerService customers;
   private final Clock clock;
 
-  public PaymentService(PaymentRepository payments, InvoiceService invoices, Clock clock) {
+  public PaymentService(
+      PaymentRepository payments, InvoiceService invoices, CustomerService customers, Clock clock) {
     this.payments = payments;
     this.invoices = invoices;
+    this.customers = customers;
     this.clock = clock;
   }
 
@@ -30,6 +34,14 @@ public class PaymentService {
   public List<PaymentResponse> list(Long invoiceId) {
     invoices.find(invoiceId);
     return payments.findByInvoiceIdOrderByPaidOnAscIdAsc(invoiceId).stream()
+        .map(PaymentResponse::from)
+        .toList();
+  }
+
+  @Transactional(readOnly = true)
+  public List<PaymentResponse> listForCustomer(Long customerId) {
+    customers.find(customerId);
+    return payments.findByInvoiceCustomerIdOrderByPaidOnDescIdDesc(customerId).stream()
         .map(PaymentResponse::from)
         .toList();
   }
