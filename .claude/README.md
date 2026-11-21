@@ -9,7 +9,7 @@ Markdown, JSON and a few short shell scripts. No agent code.
 | Project instructions | `CLAUDE.md`, `frontend/CLAUDE.md`, `backend/CLAUDE.md`, `docs/agent/` | 1 (done) |
 | Permissions and the sandbox | `.claude/settings.json`, `docs/agent/settings-explained.md` | 2 (done) |
 | Hooks: rules the agent can't skip | `.claude/hooks/`, `docs/agent/hooks-testing.md` | 3 (done) |
-| Skills: our know-how, loaded when needed | `.claude/skills/` | 4 |
+| Skills: our know-how, loaded when needed | `.claude/skills/`, `docs/agent/skill-template.md` | 4 (done) |
 | Outside tools for the whole team (MCP) | `.mcp.json` | 5 |
 | Subagents: a planner, builder, tester, reviewer and security checker | `.claude/agents/` | 6 |
 | One-word workflows, with a spec first | `specs/`, `.claude/skills/` | 7 |
@@ -52,3 +52,30 @@ They need `bash` and `jq`. Every run writes one line to `.claude/hooks.log` (git
 `.claude/state/` (git-ignored) is what they remember during a session. The deny rules in
 `settings.json` stop the agent from editing this folder. To test a hook without the agent, see
 `docs/agent/hooks-testing.md`, or run `bash kit-tests/hooks/test-hooks.sh`.
+
+## Skills (Episode 4)
+
+`skills/` holds one folder per skill. Each has a `SKILL.md`: a name, a one-line description, and
+the steps. At the start of a session the agent sees only the names and descriptions. It reads the
+rest of a skill when a task matches the description, so the know-how costs nothing until it's needed.
+
+| Skill | Loaded | What it's for |
+|---|---|---|
+| `add-api-endpoint/` | when a task matches | a Spring Boot endpoint our way, from `templates/` |
+| `db-migration/` | when a task matches | a Flyway file, checked on a scratch database by `scripts/check-migration.sh` |
+| `pull-request/` | when a task matches | a PR title and description with our five headings |
+| `responsive-layout-check/` | when a task matches | screenshots at 375, 768 and 1280 pixels, and anything too wide |
+| `ship-check/` | only when you type `/ship-check` | every CI check and a look at git: ready to ship or not |
+
+Where know-how goes:
+
+| | Loaded | Use it for |
+|---|---|---|
+| `CLAUDE.md` | every session, in full | short rules for every change |
+| a skill | when a task matches its description | how to do one kind of job |
+| a skill with `disable-model-invocation: true` | only when you type `/name` | a job with side effects you start yourself |
+| a hook | every time, whatever the agent thinks | a rule that must never be skipped |
+
+To write a new one, copy `docs/agent/skill-template.md`, and check it against
+`docs/agent/should-this-be-a-skill.md`. Read every skill you download before you put it here:
+its scripts run with your access. `kit-tests/poisoned-skill/` shows why.

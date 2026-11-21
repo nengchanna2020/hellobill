@@ -31,5 +31,6 @@ Screenshots for any page that changed (the responsive-layout-check skill takes t
 What could go wrong in production, and how to undo it. "None" is allowed, but say why.
 ```
 
-Keep it under 40 lines. Write it to `.claude/state/pr.md` and show it to the user. Only open the
-pull request on GitHub if the user asks you to (`gh pr create --title "..." --body-file .claude/state/pr.md`).
+Keep it under 40 lines. Put the title and the description in your answer, as one Markdown block the
+user can copy. Don't save it inside `.claude/`: Claude Code protects that folder. Only open the pull
+request on GitHub if the user asks you to (`gh pr create --title "..." --body "..."`).
