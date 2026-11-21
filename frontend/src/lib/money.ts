@@ -6,9 +6,7 @@ export function formatMoney(amount: number | string, currency: string): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
-    // Always show cents so columns of numbers line up.
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    // No fraction overrides: each currency uses its own digits (USD 2, JPY 0).
   }).format(Number(amount));
 }
 

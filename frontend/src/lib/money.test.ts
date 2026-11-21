@@ -9,6 +9,10 @@ describe("formatMoney", () => {
     expect(formatMoney(99, "EUR")).toBe("€99.00");
   });
 
+  it("shows yen without cents", () => {
+    expect(formatMoney("64350.00", "JPY")).toBe("¥64,350");
+  });
+
   it("accepts strings from the API", () => {
     expect(formatMoney("149.05", "USD")).toBe("$149.05");
   });
