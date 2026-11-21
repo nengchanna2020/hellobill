@@ -1,10 +1,11 @@
 # Backend: Spring Boot 4, Java 21, Gradle
 
-Run from `backend/`:
+Run Gradle from the repo root, as one command on its own (no `cd`, no pipe). The sandbox lets
+exactly this command out, because the tests need Docker:
 
-- Checks: `./gradlew spotlessApply test` (CI runs `spotlessCheck test`)
-- One test class: `./gradlew test --tests com.hellobill.invoice.InvoiceCalculatorTest`
-- Start the API: `./gradlew bootRun` (port 8080, fills an empty database with demo data)
+- Checks: `backend/gradlew -p backend spotlessApply test` (CI runs `spotlessCheck test`)
+- One test class: `backend/gradlew -p backend test --tests com.hellobill.invoice.InvoiceCalculatorTest`
+- Start the API: `backend/gradlew -p backend bootRun` (port 8080, fills an empty database with demo data)
 
 Rules:
 

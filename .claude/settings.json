@@ -10,9 +10,9 @@
       "Bash(npm run format *)",
       "Bash(npm run typecheck *)",
       "Bash(npx vitest run *)",
-      "Bash(./gradlew test *)",
-      "Bash(./gradlew spotlessApply *)",
-      "Bash(./gradlew spotlessCheck *)",
+      "Bash(backend/gradlew -p backend test *)",
+      "Bash(backend/gradlew -p backend spotlessApply *)",
+      "Bash(backend/gradlew -p backend spotlessCheck *)",
       "Bash(git add *)",
       "Bash(git commit *)"
     ],
@@ -35,6 +35,12 @@
     "enabled": true,
     "autoAllowBashIfSandboxed": true,
     "allowUnsandboxedCommands": false,
+    "excludedCommands": [
+      "backend/gradlew -p backend *",
+      "tail *",
+      "head *",
+      "grep *"
+    ],
     "filesystem": {
       "allowWrite": [
         "~/.gradle",
