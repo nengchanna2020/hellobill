@@ -12,7 +12,7 @@ CHANGED=$( (git diff --name-only "$START"; git ls-files --others --exclude-stand
 DIRS=$(grep -oE '^(frontend|backend)/' <<<"$CHANGED" | sort -u | tr -d / | xargs)
 if [ -z "$DIRS" ]; then log "no code changes" ""; exit 0; fi
 # The same files as the last time the checks passed? Then there's nothing new to check.
-TREE=$(GIT_INDEX_FILE="$STATE/index" bash -c 'git read-tree HEAD && git add -A && git write-tree')
+TREE=$(GIT_INDEX_FILE="$STATE/index" bash -c 'git read-tree HEAD && git add -A -- frontend backend && git write-tree')
 if [ -f "$STATE/green-$TREE" ]; then log "already green" "$DIRS"; exit 0; fi
 lock; OUT=""; FAIL=""
 for d in $DIRS; do

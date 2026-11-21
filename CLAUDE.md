@@ -13,6 +13,8 @@ Postgres and Mailpit in `docker-compose.yml`. Each folder has its own CLAUDE.md 
 - Money is `BigDecimal` in Java and `NUMERIC(12,2)` in Postgres, rounded half up. Never `double`.
 - Database changes go in a new Flyway file (`V<next>__what.sql`). Never edit an old one.
 - New behaviour gets its own test, and the test checks the real value, not just that it exists.
+- Change files with your Edit and Write tools, not with shell commands (sed, python, cat >).
+  The hooks format and test every edit, and they only see those tools.
 - Before you say done, run the checks for every folder you changed, and show me the result.
 - Then commit once, with a short subject that starts with a verb, like the git log.
 
