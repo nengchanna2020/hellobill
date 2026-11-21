@@ -44,6 +44,16 @@ class InvoiceCalculatorTest {
   }
 
   @Test
+  void taxesTheAmountAfterDiscount() {
+    InvoiceTotals t = totals(List.of(item("1", "450.00")), "10", "8");
+
+    assertThat(t.subtotal()).isEqualByComparingTo("450.00");
+    assertThat(t.discount()).isEqualByComparingTo("45.00");
+    assertThat(t.tax()).isEqualByComparingTo("32.40");
+    assertThat(t.total()).isEqualByComparingTo("437.40");
+  }
+
+  @Test
   void roundsEachLineToCents() {
     InvoiceTotals t = totals(List.of(item("1.5", "9.99")), "0", "0");
 

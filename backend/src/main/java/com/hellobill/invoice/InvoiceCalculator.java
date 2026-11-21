@@ -25,8 +25,9 @@ public final class InvoiceCalculator {
     }
 
     BigDecimal discount = Money.percentOf(subtotal, discountPercent);
-    BigDecimal tax = Money.percentOf(subtotal, taxRate);
-    BigDecimal total = subtotal.subtract(discount).add(tax);
+    BigDecimal taxable = subtotal.subtract(discount);
+    BigDecimal tax = Money.percentOf(taxable, taxRate);
+    BigDecimal total = taxable.add(tax);
 
     return new InvoiceTotals(subtotal, discount, tax, total);
   }
