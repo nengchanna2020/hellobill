@@ -1,6 +1,6 @@
 ---
 name: add-api-endpoint
-description: Backend helpers.
+description: Adds a REST endpoint to the HelloBill Spring Boot API the team's way - controller, service, request and response records, an API test, and a line in docs/api.md. Use when asked to add, create or expose an endpoint, route or API call in backend/.
 ---
 
 # Add an API endpoint
