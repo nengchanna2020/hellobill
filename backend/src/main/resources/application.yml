@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: hellobill
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hellobill
+    username: hellobill
+    password: hellobill
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  mail:
+    host: localhost
+    port: 1025
+
+server:
+  port: 8080
+
+hellobill:
+  business-name: HelloBill Demo Co.
+  mail-from: billing@hellobill.local
+  # Fills an empty database with fake customers and invoices on startup.
+  demo-data: true
