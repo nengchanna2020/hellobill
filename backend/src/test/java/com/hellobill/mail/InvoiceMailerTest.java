@@ -27,6 +27,7 @@ class InvoiceMailerTest {
             "USD",
             LocalDate.of(2026, 3, 1),
             30,
+            LocalDate.of(2026, 3, 31),
             BigDecimal.ZERO,
             BigDecimal.ZERO,
             null,
@@ -53,7 +54,7 @@ class InvoiceMailerTest {
         .contains("INV-0007")
         .contains("Website maintenance  1 x 450.00 = 450.00")
         .contains("Total: 450.00 USD")
-        .contains("within 30 days")
+        .contains("within 30 days, by 2026-03-31.")
         .doesNotContain("Discount");
   }
 }

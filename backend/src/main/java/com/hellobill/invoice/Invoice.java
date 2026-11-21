@@ -121,6 +121,11 @@ public class Invoice {
     this.issueDate = issueDate;
   }
 
+  /** Issue date plus the payment terms. Derived, so it can't drift from either. */
+  public LocalDate getDueDate() {
+    return issueDate.plusDays(paymentTermsDays);
+  }
+
   public int getPaymentTermsDays() {
     return paymentTermsDays;
   }

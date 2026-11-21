@@ -147,6 +147,7 @@ public class InvoiceService {
         invoice.getCurrency(),
         invoice.getIssueDate(),
         invoice.getPaymentTermsDays(),
+        invoice.getDueDate(),
         invoice.getTaxRate(),
         invoice.getDiscountPercent(),
         invoice.getNotes(),
@@ -173,6 +174,7 @@ public class InvoiceService {
         invoice.getCustomer().getName(),
         invoice.getCurrency(),
         invoice.getIssueDate(),
+        invoice.getDueDate(),
         totals.total(),
         totals.total().subtract(paid));
   }

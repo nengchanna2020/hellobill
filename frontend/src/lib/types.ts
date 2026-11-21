@@ -35,6 +35,7 @@ export interface Invoice {
   currency: string;
   issueDate: string;
   paymentTermsDays: number;
+  dueDate: string;
   taxRate: number;
   discountPercent: number;
   notes: string | null;
@@ -58,6 +59,7 @@ export interface InvoiceSummary {
   customerName: string;
   currency: string;
   issueDate: string;
+  dueDate: string;
   total: number;
   balanceDue: number;
 }

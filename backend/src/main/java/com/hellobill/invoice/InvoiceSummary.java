@@ -12,5 +12,6 @@ public record InvoiceSummary(
     String customerName,
     String currency,
     LocalDate issueDate,
+    LocalDate dueDate,
     BigDecimal total,
     BigDecimal balanceDue) {}

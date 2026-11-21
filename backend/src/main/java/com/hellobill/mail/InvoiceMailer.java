@@ -67,7 +67,9 @@ public class InvoiceMailer {
     }
     text.append("\nPlease pay within ")
         .append(invoice.paymentTermsDays())
-        .append(" days.\n\nThank you,\n")
+        .append(" days, by ")
+        .append(invoice.dueDate())
+        .append(".\n\nThank you,\n")
         .append(businessName)
         .append('\n');
     return text.toString();

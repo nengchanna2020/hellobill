@@ -14,6 +14,7 @@ public record InvoiceResponse(
     String currency,
     LocalDate issueDate,
     int paymentTermsDays,
+    LocalDate dueDate,
     BigDecimal taxRate,
     BigDecimal discountPercent,
     String notes,

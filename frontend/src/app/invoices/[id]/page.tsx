@@ -90,6 +90,10 @@ export default function InvoicePage() {
             <span className="muted">Payment terms: {invoice.paymentTermsDays} days</span>
           </p>
         </div>
+        <div>
+          <span className="label">Due</span>
+          <p>{formatDate(invoice.dueDate)}</p>
+        </div>
         {invoice.sentAt && (
           <div>
             <span className="label">Sent</span>

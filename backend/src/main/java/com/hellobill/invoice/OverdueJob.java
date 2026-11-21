@@ -32,7 +32,7 @@ public class OverdueJob {
     LocalDate today = LocalDate.now(clock);
     int count = 0;
     for (Invoice invoice : invoices.findByStatus(InvoiceStatus.SENT)) {
-      LocalDate dueDate = invoice.getIssueDate().plusDays(invoice.getPaymentTermsDays());
+      LocalDate dueDate = invoice.getDueDate();
       if (!dueDate.isAfter(today)) {
         invoice.setStatus(InvoiceStatus.OVERDUE);
         count++;

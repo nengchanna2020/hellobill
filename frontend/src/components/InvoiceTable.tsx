@@ -15,6 +15,7 @@ export function InvoiceTable({ invoices }: { invoices: InvoiceSummary[] }) {
           <th>Number</th>
           <th>Customer</th>
           <th>Issued</th>
+          <th>Due</th>
           <th>Status</th>
           <th className="num">Total</th>
           <th className="num">Balance due</th>
@@ -28,6 +29,7 @@ export function InvoiceTable({ invoices }: { invoices: InvoiceSummary[] }) {
             </td>
             <td>{invoice.customerName}</td>
             <td>{formatDate(invoice.issueDate)}</td>
+            <td>{formatDate(invoice.dueDate)}</td>
             <td>
               <StatusBadge status={invoice.status} />
             </td>

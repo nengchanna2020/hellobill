@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.hellobill.IntegrationTest;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
@@ -39,6 +40,31 @@ class InvoiceApiTest extends IntegrationTest {
         .andExpect(jsonPath("$.tax").value(13.55))
         .andExpect(jsonPath("$.total").value(149.05))
         .andExpect(jsonPath("$.balanceDue").value(149.05));
+  }
+
+  @Test
+  void dueDateIsIssueDatePlusPaymentTerms() throws Exception {
+    long customer = createCustomer("Lotus Bakery", "USD");
+    String created =
+        postJson(
+            "/api/invoices",
+            """
+            {"customerId": %d, "issueDate": "2026-01-20", "paymentTermsDays": 14,
+             "items": %s}
+            """
+                .formatted(customer, TWO_ITEMS));
+    long id = ((Number) JsonPath.read(created, "$.id")).longValue();
+
+    mvc.perform(get("/api/invoices/{id}", id)).andExpect(jsonPath("$.dueDate").value("2026-02-03"));
+    mvc.perform(get("/api/invoices")).andExpect(jsonPath("$[0].dueDate").value("2026-02-03"));
+
+    mvc.perform(
+            put("/api/invoices/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    "{\"customerId\": %d, \"paymentTermsDays\": 30, \"items\": %s}"
+                        .formatted(customer, TWO_ITEMS)))
+        .andExpect(jsonPath("$.dueDate").value("2026-02-19"));
   }
 
   @Test
