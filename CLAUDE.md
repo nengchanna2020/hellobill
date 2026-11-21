@@ -17,9 +17,12 @@ Postgres and Mailpit in `docker-compose.yml`. Each folder has its own CLAUDE.md 
   The hooks format and test every edit, and they only see those tools.
 - Before you say done, run the checks for every folder you changed, and show me the result.
 - Then commit once, with a short subject that starts with a verb, like the git log.
+- For a change to several files, get a plan from the `planner` agent first, and a review from the
+  `reviewer` agent before you commit.
 
 ## When you need more
 
 - How the backend fits together: `docs/agent/architecture.md`
 - How to write tests here: `docs/agent/testing.md`
 - GitHub, the browser and the database (MCP servers): `docs/agent/mcp-servers.md`
+- The team of subagents and what each one does: `.claude/README.md`
