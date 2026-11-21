@@ -156,7 +156,8 @@ public class DemoDataSeeder implements ApplicationRunner {
 
   private CustomerResponse customer(
       String name, String email, String country, String currency, int paymentTermsDays) {
-    return customers.create(new CustomerRequest(name, email, country, currency, paymentTermsDays));
+    return customers.create(
+        new CustomerRequest(name, email, null, country, currency, paymentTermsDays));
   }
 
   private static InvoiceItemRequest item(String description, String qty, String price) {

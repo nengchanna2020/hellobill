@@ -8,6 +8,7 @@ const customer = (id: number, name: string, terms: number): Customer => ({
   id,
   name,
   email: `${name}@example.com`,
+  phone: null,
   country: "KH",
   currency: "USD",
   defaultPaymentTermsDays: terms,

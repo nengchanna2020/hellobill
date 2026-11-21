@@ -29,6 +29,10 @@ export default function CustomerPage() {
           <p>{customer.email}</p>
         </div>
         <div>
+          <span className="label">Phone</span>
+          <p>{customer.phone ?? "—"}</p>
+        </div>
+        <div>
           <span className="label">Country and currency</span>
           <p>
             {customer.country} · {customer.currency}

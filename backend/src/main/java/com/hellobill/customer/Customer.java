@@ -20,6 +20,10 @@ public class Customer {
 
   private String email;
 
+  /** Optional contact phone number, for example "+855 12 345 678". */
+  @Column(length = 30)
+  private String phone;
+
   /** ISO 3166 two-letter country code, for example "KH" or "DE". */
   @Column(length = 2)
   private String country;
@@ -63,6 +67,14 @@ public class Customer {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
   }
 
   public String getCountry() {

@@ -21,6 +21,7 @@ export default function CustomersPage() {
               <tr>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Phone</th>
                 <th>Country</th>
                 <th>Currency</th>
               </tr>
@@ -32,6 +33,7 @@ export default function CustomersPage() {
                     <Link href={`/customers/${c.id}`}>{c.name}</Link>
                   </td>
                   <td>{c.email}</td>
+                  <td>{c.phone ?? "—"}</td>
                   <td>{c.country}</td>
                   <td>{c.currency}</td>
                 </tr>

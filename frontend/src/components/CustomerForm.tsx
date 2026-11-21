@@ -10,6 +10,7 @@ const CURRENCIES = ["USD", "EUR", "GBP", "KHR", "JPY", "CAD", "AUD", "SGD", "THB
 export function CustomerForm({ onSaved }: { onSaved: (c: Customer) => void }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [country, setCountry] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [terms, setTerms] = useState("30");
@@ -24,12 +25,14 @@ export function CustomerForm({ onSaved }: { onSaved: (c: Customer) => void }) {
       const saved = await api.post<Customer>("/customers", {
         name,
         email,
+        phone: phone.trim() || null,
         country: country.toUpperCase(),
         currency,
         defaultPaymentTermsDays: Number(terms),
       });
       setName("");
       setEmail("");
+      setPhone("");
       setCountry("");
       onSaved(saved);
     } catch (e) {
@@ -53,6 +56,11 @@ export function CustomerForm({ onSaved }: { onSaved: (c: Customer) => void }) {
         Email
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         {fields.email && <small className="error">{fields.email}</small>}
+      </label>
+      <label>
+        Phone (optional)
+        <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={30} />
+        {fields.phone && <small className="error">{fields.phone}</small>}
       </label>
       <label>
         Country code

@@ -32,6 +32,7 @@ public class CustomerService {
     Customer customer =
         new Customer(
             request.name().trim(), request.email().trim(), request.country(), request.currency());
+    customer.setPhone(cleanPhone(request.phone()));
     if (request.defaultPaymentTermsDays() != null) {
       customer.setDefaultPaymentTermsDays(request.defaultPaymentTermsDays());
     }
@@ -45,6 +46,7 @@ public class CustomerService {
     Customer customer = find(id);
     customer.setName(request.name().trim());
     customer.setEmail(request.email().trim());
+    customer.setPhone(cleanPhone(request.phone()));
     customer.setCountry(request.country());
     customer.setCurrency(request.currency());
     if (request.defaultPaymentTermsDays() != null) {
@@ -55,6 +57,10 @@ public class CustomerService {
 
   public Customer find(Long id) {
     return customers.findById(id).orElseThrow(() -> new NotFoundException("Customer", id));
+  }
+
+  private static String cleanPhone(String phone) {
+    return phone == null || phone.isBlank() ? null : phone.trim();
   }
 
   private static void checkCurrency(String code) {

@@ -1,6 +1,7 @@
 package com.hellobill.customer;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -8,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.hellobill.IntegrationTest;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
@@ -122,5 +124,53 @@ class CustomerApiTest extends IntegrationTest {
                      "currency": "XYZ"}
                     """))
         .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void storesTrimsAndClearsPhone() throws Exception {
+    String body =
+        postJson(
+            "/api/customers",
+            """
+            {"name": "Phone Co", "email": "a@example.com", "phone": " +855 12 345 678 ",
+             "country": "KH", "currency": "USD"}
+            """);
+    long id = ((Number) JsonPath.read(body, "$.id")).longValue();
+
+    mvc.perform(get("/api/customers/{id}", id))
+        .andExpect(jsonPath("$.phone").value("+855 12 345 678"));
+
+    // An update with a blank phone clears it.
+    mvc.perform(
+            put("/api/customers/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    """
+                    {"name": "Phone Co", "email": "a@example.com", "phone": "",
+                     "country": "KH", "currency": "USD"}
+                    """))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.phone").value(nullValue()));
+
+    long plain = createCustomer("No Phone Co", "USD");
+    mvc.perform(get("/api/customers/{id}", plain))
+        .andExpect(jsonPath("$.phone").value(nullValue()));
+  }
+
+  @Test
+  void rejectsBadPhone() throws Exception {
+    for (String phone : new String[] {"call me", "12", "+1".repeat(20)}) {
+      mvc.perform(
+              post("/api/customers")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(
+                      """
+                      {"name": "Bad Phone", "email": "a@example.com", "phone": "%s",
+                       "country": "KH", "currency": "USD"}
+                      """
+                          .formatted(phone)))
+          .andExpect(status().isBadRequest())
+          .andExpect(jsonPath("$.fields.phone").exists());
+    }
   }
 }
