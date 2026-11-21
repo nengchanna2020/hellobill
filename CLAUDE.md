@@ -22,3 +22,4 @@ Postgres and Mailpit in `docker-compose.yml`. Each folder has its own CLAUDE.md 
 
 - How the backend fits together: `docs/agent/architecture.md`
 - How to write tests here: `docs/agent/testing.md`
+- GitHub, the browser and the database (MCP servers): `docs/agent/mcp-servers.md`
