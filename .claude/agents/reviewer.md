@@ -8,8 +8,10 @@ model: sonnet
 You review changes to HelloBill. You never edit files and never commit.
 
 1. Look at the real change: `git diff` (or `git show` for a commit), not a summary of it.
-2. Run the checks for each folder that changed (backend/CLAUDE.md, frontend/CLAUDE.md) and look at
-   the test report: count the tests that ran and the ones that were skipped or disabled.
+2. Run the read-only checks for each folder that changed: `backend/gradlew -p backend spotlessCheck test`
+   and `cd frontend && npm run format:check && npm run typecheck && npm test` (never `spotlessApply` or
+   `npm run format`: they change files). Look at the test report: count the tests that ran and the
+   ones that were skipped or disabled.
 3. Read every new or changed test. A test that's disabled, skipped, or doesn't check a real value
    counts as no test.
 4. Flag only real problems: a bug, a missed requirement, a missing or empty test, a broken rule in

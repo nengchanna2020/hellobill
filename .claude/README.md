@@ -11,7 +11,7 @@ Markdown, JSON and a few short shell scripts. No agent code.
 | Hooks: rules the agent can't skip | `.claude/hooks/`, `docs/agent/hooks-testing.md` | 3 (done) |
 | Skills: our know-how, loaded when needed | `.claude/skills/`, `docs/agent/skill-template.md` | 4 (done) |
 | Outside tools for the whole team (MCP) | `.mcp.json`, `docs/agent/mcp-servers.md` | 5 (done) |
-| Subagents: a planner, builder, tester, reviewer and security checker | `.claude/agents/` | 6 |
+| Subagents: a planner, builder, tester, reviewer and security checker | `.claude/agents/` | 6 (done) |
 | One-word workflows, with a spec first | `specs/`, `.claude/skills/` | 7 |
 | Testing the kit itself | `evals/` | 8 |
 | Sharing it as a plugin, and running it on GitHub | `ai-team-kit/`, `.github/workflows/` | 9 |
@@ -88,3 +88,21 @@ database). Tokens come from each person's environment, never from the file: see 
 `settings.json` turns the three on (`enabledMcpjsonServers`) and has a rule for each tool: reading
 is allowed, commenting and opening a pull request ask first, merging is denied. Setup and the
 reasons: `docs/agent/mcp-servers.md`. Before you add a server: `docs/agent/is-this-server-safe.md`.
+
+## Subagents (Episode 6)
+
+`agents/` holds the team: five helpers, each with one job, its own tools and its own model. The main
+session hands work to one when the task matches its description (or when you name it), and gets a
+short result back. Each helper starts with a fresh context, so the brief must say everything.
+
+| Agent | Job | Tools | Model |
+|---|---|---|---|
+| `planner` | a short plan with "done when" | read only | haiku |
+| `builder` | writes the code and tests, runs the checks | edit, shell, skills | same as the session |
+| `tester` | tries to break the change with edge-case tests | edit tests, shell | sonnet |
+| `reviewer` | checks the real diff, runs the checks, quotes the results | read, shell | sonnet |
+| `security-checker` | secrets, input, SQL, permission rules | read only | haiku |
+
+The reviewer can't approve without quoting the check results, and flags only real problems. To add
+one: `docs/agent/subagent-template.md` and `docs/agent/one-job-per-agent.md`.
+
