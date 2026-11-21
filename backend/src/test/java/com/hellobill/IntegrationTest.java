@@ -56,6 +56,19 @@ public abstract class IntegrationTest {
     return ((Number) JsonPath.read(body, "$.id")).longValue();
   }
 
+  protected long createCustomer(String name, String currency, int paymentTermsDays)
+      throws Exception {
+    String body =
+        postJson(
+            "/api/customers",
+            """
+            {"name": "%s", "email": "test@example.com", "country": "KH", "currency": "%s",
+             "defaultPaymentTermsDays": %d}
+            """
+                .formatted(name, currency, paymentTermsDays));
+    return ((Number) JsonPath.read(body, "$.id")).longValue();
+  }
+
   protected long createInvoice(long customerId, String itemsJson) throws Exception {
     return createInvoice(customerId, itemsJson, "0", "0");
   }

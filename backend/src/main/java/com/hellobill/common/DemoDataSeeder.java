@@ -69,15 +69,15 @@ public class DemoDataSeeder implements ApplicationRunner {
     LocalDate today = LocalDate.now(clock);
 
     CustomerResponse lotus =
-        customer("Lotus Bakery", "accounts@lotus-bakery.example.com", "KH", "USD");
+        customer("Lotus Bakery", "accounts@lotus-bakery.example.com", "KH", "USD", 30);
     CustomerResponse kranich =
-        customer("Kranich Design GmbH", "rechnung@kranich.example.com", "DE", "EUR");
+        customer("Kranich Design GmbH", "rechnung@kranich.example.com", "DE", "EUR", 14);
     CustomerResponse maple =
-        customer("Maple & Pine Studio", "hello@maplepine.example.com", "CA", "CAD");
+        customer("Maple & Pine Studio", "hello@maplepine.example.com", "CA", "CAD", 30);
     CustomerResponse sakura =
-        customer("Sakura Tea House", "billing@sakura-tea.example.com", "JP", "JPY");
+        customer("Sakura Tea House", "billing@sakura-tea.example.com", "JP", "JPY", 45);
     CustomerResponse river =
-        customer("Riverbend Fitness", "office@riverbend.example.com", "US", "USD");
+        customer("Riverbend Fitness", "office@riverbend.example.com", "US", "USD", 30);
 
     // Paid in full last month.
     InvoiceResponse inv1 =
@@ -154,8 +154,9 @@ public class DemoDataSeeder implements ApplicationRunner {
     log.info("Added demo data: 5 customers, 6 invoices, 2 monthly plans (all fake)");
   }
 
-  private CustomerResponse customer(String name, String email, String country, String currency) {
-    return customers.create(new CustomerRequest(name, email, country, currency));
+  private CustomerResponse customer(
+      String name, String email, String country, String currency, int paymentTermsDays) {
+    return customers.create(new CustomerRequest(name, email, country, currency, paymentTermsDays));
   }
 
   private static InvoiceItemRequest item(String description, String qty, String price) {
@@ -172,7 +173,7 @@ public class DemoDataSeeder implements ApplicationRunner {
         new InvoiceRequest(
             customer.id(),
             issueDate,
-            30,
+            null,
             new BigDecimal(taxRate),
             new BigDecimal(discount),
             null,

@@ -61,6 +61,16 @@ class RecurringBillingTest extends IntegrationTest {
   }
 
   @Test
+  void recurringInvoicesUseTheCustomersPaymentTerms() throws Exception {
+    long customer = createCustomer("Net45 Co", "USD", 45);
+    createPlan(customer, LocalDate.now().minusDays(1));
+
+    mvc.perform(post("/api/recurring-plans/run"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].paymentTermsDays").value(45));
+  }
+
+  @Test
   void pausedPlansDoNotBill() throws Exception {
     long customer = createCustomer("Lotus Bakery", "USD");
     long plan = createPlan(customer, LocalDate.now());

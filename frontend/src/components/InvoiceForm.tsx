@@ -23,7 +23,9 @@ export function InvoiceForm({ customers, invoice }: Props) {
     String(invoice?.customer.id ?? customers[0]?.id ?? ""),
   );
   const [issueDate, setIssueDate] = useState(invoice?.issueDate ?? today());
-  const [terms, setTerms] = useState(String(invoice?.paymentTermsDays ?? 30));
+  const [terms, setTerms] = useState(
+    String(invoice?.paymentTermsDays ?? customers[0]?.defaultPaymentTermsDays ?? 30),
+  );
   const [taxRate, setTaxRate] = useState(String(invoice?.taxRate ?? 0));
   const [discount, setDiscount] = useState(String(invoice?.discountPercent ?? 0));
   const [notes, setNotes] = useState(invoice?.notes ?? "");
@@ -40,6 +42,15 @@ export function InvoiceForm({ customers, invoice }: Props) {
   const customer = customers.find((c) => String(c.id) === customerId);
   const currency = customer?.currency ?? "USD";
   const totals = previewTotals(items, discount, taxRate);
+
+  function changeCustomer(id: string) {
+    setCustomerId(id);
+    // A new invoice starts with the customer's terms. You can still change them.
+    const picked = customers.find((c) => String(c.id) === id);
+    if (!invoice && picked) {
+      setTerms(String(picked.defaultPaymentTermsDays));
+    }
+  }
 
   function updateItem(index: number, change: Partial<DraftItem>) {
     setItems(items.map((item, i) => (i === index ? { ...item, ...change } : item)));
@@ -84,7 +95,7 @@ export function InvoiceForm({ customers, invoice }: Props) {
           Customer
           <select
             value={customerId}
-            onChange={(e) => setCustomerId(e.target.value)}
+            onChange={(e) => changeCustomer(e.target.value)}
             disabled={Boolean(invoice)}
           >
             {customers.map((c) => (

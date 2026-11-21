@@ -28,6 +28,10 @@ public class Customer {
   @Column(length = 3)
   private String currency;
 
+  /** Payment terms in days that new invoices for this customer start with. */
+  @Column(name = "default_payment_terms_days")
+  private int defaultPaymentTermsDays = 30;
+
   @Column(name = "created_at", updatable = false)
   private Instant createdAt;
 
@@ -75,6 +79,14 @@ public class Customer {
 
   public void setCurrency(String currency) {
     this.currency = currency;
+  }
+
+  public int getDefaultPaymentTermsDays() {
+    return defaultPaymentTermsDays;
+  }
+
+  public void setDefaultPaymentTermsDays(int defaultPaymentTermsDays) {
+    this.defaultPaymentTermsDays = defaultPaymentTermsDays;
   }
 
   public Instant getCreatedAt() {

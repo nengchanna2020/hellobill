@@ -29,13 +29,13 @@ public class CustomerService {
   @Transactional
   public CustomerResponse create(CustomerRequest request) {
     checkCurrency(request.currency());
-    Customer saved =
-        customers.save(
-            new Customer(
-                request.name().trim(),
-                request.email().trim(),
-                request.country(),
-                request.currency()));
+    Customer customer =
+        new Customer(
+            request.name().trim(), request.email().trim(), request.country(), request.currency());
+    if (request.defaultPaymentTermsDays() != null) {
+      customer.setDefaultPaymentTermsDays(request.defaultPaymentTermsDays());
+    }
+    Customer saved = customers.save(customer);
     return CustomerResponse.from(saved);
   }
 
@@ -47,6 +47,9 @@ public class CustomerService {
     customer.setEmail(request.email().trim());
     customer.setCountry(request.country());
     customer.setCurrency(request.currency());
+    if (request.defaultPaymentTermsDays() != null) {
+      customer.setDefaultPaymentTermsDays(request.defaultPaymentTermsDays());
+    }
     return CustomerResponse.from(customer);
   }
 

@@ -68,6 +68,62 @@ class InvoiceApiTest extends IntegrationTest {
   }
 
   @Test
+  void newInvoiceStartsWithTheCustomersPaymentTerms() throws Exception {
+    long customer = createCustomer("Net45 Co", "USD", 45);
+    String created =
+        postJson(
+            "/api/invoices",
+            """
+            {"customerId": %d, "issueDate": "2026-01-20", "items": %s}
+            """
+                .formatted(customer, TWO_ITEMS));
+    long id = ((Number) JsonPath.read(created, "$.id")).longValue();
+
+    mvc.perform(get("/api/invoices/{id}", id))
+        .andExpect(jsonPath("$.paymentTermsDays").value(45))
+        .andExpect(jsonPath("$.dueDate").value("2026-03-06"));
+  }
+
+  @Test
+  void explicitPaymentTermsBeatTheCustomersDefault() throws Exception {
+    long customer = createCustomer("Net45 Co", "USD", 45);
+    String created =
+        postJson(
+            "/api/invoices",
+            """
+            {"customerId": %d, "issueDate": "2026-01-20", "paymentTermsDays": 10,
+             "items": %s}
+            """
+                .formatted(customer, TWO_ITEMS));
+    long id = ((Number) JsonPath.read(created, "$.id")).longValue();
+
+    mvc.perform(get("/api/invoices/{id}", id))
+        .andExpect(jsonPath("$.paymentTermsDays").value(10))
+        .andExpect(jsonPath("$.dueDate").value("2026-01-30"));
+  }
+
+  @Test
+  void changingTheDefaultLeavesExistingInvoicesAlone() throws Exception {
+    long customer = createCustomer("Net45 Co", "USD", 45);
+    long id = createInvoice(customer, TWO_ITEMS);
+
+    mvc.perform(
+            put("/api/customers/{id}", customer)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    """
+                    {"name": "Net45 Co", "email": "test@example.com", "country": "KH",
+                     "currency": "USD", "defaultPaymentTermsDays": 7}
+                    """))
+        .andExpect(status().isOk());
+
+    mvc.perform(get("/api/invoices/{id}", id)).andExpect(jsonPath("$.paymentTermsDays").value(45));
+    long later = createInvoice(customer, TWO_ITEMS);
+    mvc.perform(get("/api/invoices/{id}", later))
+        .andExpect(jsonPath("$.paymentTermsDays").value(7));
+  }
+
+  @Test
   void numbersInvoicesInOrder() throws Exception {
     long customer = createCustomer("Lotus Bakery", "USD");
     createInvoice(customer, TWO_ITEMS);

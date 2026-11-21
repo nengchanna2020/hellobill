@@ -34,6 +34,10 @@ export default function CustomerPage() {
             {customer.country} · {customer.currency}
           </p>
         </div>
+        <div>
+          <span className="label">Default payment terms</span>
+          <p>Net {customer.defaultPaymentTermsDays} days</p>
+        </div>
       </section>
       <section className="card">
         <h2>Invoices</h2>

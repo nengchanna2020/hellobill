@@ -9,6 +9,7 @@ export interface Customer {
   email: string;
   country: string;
   currency: string;
+  defaultPaymentTermsDays: number;
   createdAt: string;
 }
 

@@ -67,6 +67,7 @@ public class InvoiceService {
     Customer customer = customers.find(request.customerId());
     LocalDate issueDate = request.issueDate() != null ? request.issueDate() : LocalDate.now(clock);
     Invoice invoice = new Invoice(numbers.next(), customer, issueDate);
+    invoice.setPaymentTermsDays(customer.getDefaultPaymentTermsDays());
     apply(invoice, request);
     return toResponse(invoices.save(invoice));
   }

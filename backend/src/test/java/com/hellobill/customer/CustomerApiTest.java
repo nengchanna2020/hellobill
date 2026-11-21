@@ -43,6 +43,60 @@ class CustomerApiTest extends IntegrationTest {
   }
 
   @Test
+  void defaultPaymentTermsAre30UnlessGiven() throws Exception {
+    long plain = createCustomer("Plain Co", "USD");
+    long net45 = createCustomer("Net45 Co", "USD", 45);
+
+    mvc.perform(get("/api/customers/{id}", plain))
+        .andExpect(jsonPath("$.defaultPaymentTermsDays").value(30));
+    mvc.perform(get("/api/customers/{id}", net45))
+        .andExpect(jsonPath("$.defaultPaymentTermsDays").value(45));
+  }
+
+  @Test
+  void updatesAndKeepsDefaultPaymentTerms() throws Exception {
+    long id = createCustomer("Lotus Bakery", "USD", 45);
+
+    // Leaving the field out keeps the current value.
+    mvc.perform(
+            put("/api/customers/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    """
+                    {"name": "Lotus Bakery", "email": "a@example.com",
+                     "country": "KH", "currency": "USD"}
+                    """))
+        .andExpect(jsonPath("$.defaultPaymentTermsDays").value(45));
+
+    mvc.perform(
+            put("/api/customers/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    """
+                    {"name": "Lotus Bakery", "email": "a@example.com",
+                     "country": "KH", "currency": "USD", "defaultPaymentTermsDays": 7}
+                    """))
+        .andExpect(jsonPath("$.defaultPaymentTermsDays").value(7));
+  }
+
+  @Test
+  void rejectsOutOfRangePaymentTerms() throws Exception {
+    for (int days : new int[] {-1, 366}) {
+      mvc.perform(
+              post("/api/customers")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(
+                      """
+                      {"name": "Bad Terms", "email": "a@example.com", "country": "KH",
+                       "currency": "USD", "defaultPaymentTermsDays": %d}
+                      """
+                          .formatted(days)))
+          .andExpect(status().isBadRequest())
+          .andExpect(jsonPath("$.fields.defaultPaymentTermsDays").exists());
+    }
+  }
+
+  @Test
   void rejectsBadEmailAndCountry() throws Exception {
     mvc.perform(
             post("/api/customers")

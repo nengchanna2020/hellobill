@@ -82,7 +82,7 @@ public class RecurringBillingService {
           new InvoiceRequest(
               plan.getCustomer().getId(),
               runDate,
-              30,
+              null,
               plan.getTaxRate(),
               BigDecimal.ZERO,
               "Monthly billing for " + period,

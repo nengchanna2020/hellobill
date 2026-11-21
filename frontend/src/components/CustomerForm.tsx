@@ -12,6 +12,7 @@ export function CustomerForm({ onSaved }: { onSaved: (c: Customer) => void }) {
   const [email, setEmail] = useState("");
   const [country, setCountry] = useState("");
   const [currency, setCurrency] = useState("USD");
+  const [terms, setTerms] = useState("30");
   const [error, setError] = useState<string | null>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
 
@@ -25,6 +26,7 @@ export function CustomerForm({ onSaved }: { onSaved: (c: Customer) => void }) {
         email,
         country: country.toUpperCase(),
         currency,
+        defaultPaymentTermsDays: Number(terms),
       });
       setName("");
       setEmail("");
@@ -70,6 +72,20 @@ export function CustomerForm({ onSaved }: { onSaved: (c: Customer) => void }) {
             <option key={c}>{c}</option>
           ))}
         </select>
+      </label>
+      <label>
+        Default payment terms (days)
+        <input
+          type="number"
+          min="0"
+          max="365"
+          value={terms}
+          onChange={(e) => setTerms(e.target.value)}
+          required
+        />
+        {fields.defaultPaymentTermsDays && (
+          <small className="error">{fields.defaultPaymentTermsDays}</small>
+        )}
       </label>
       <button type="submit">Add customer</button>
       <ErrorMessage message={error} />
