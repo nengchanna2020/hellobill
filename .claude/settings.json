@@ -17,7 +17,9 @@
       "Bash(backend/gradlew -p backend spotlessApply *)",
       "Bash(backend/gradlew -p backend spotlessCheck *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(bash .claude/skills/db-migration/scripts/check-migration.sh)",
+      "Bash(node .claude/skills/responsive-layout-check/scripts/screens.mjs *)"
     ],
     "ask": [
       "Bash(git push *)"
@@ -44,7 +46,9 @@
       "backend/gradlew -p backend *",
       "tail *",
       "head *",
-      "grep *"
+      "grep *",
+      "bash .claude/skills/db-migration/scripts/check-migration.sh",
+      "node .claude/skills/responsive-layout-check/scripts/screens.mjs *"
     ],
     "filesystem": {
       "allowWrite": [
