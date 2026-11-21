@@ -30,3 +30,6 @@ CLAUDE.local.md
 .claude/settings.local.json
 .claude/state/
 .claude/hooks.log
+
+# Playwright MCP: page snapshots and console logs
+.playwright-mcp/

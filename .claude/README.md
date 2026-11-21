@@ -10,13 +10,13 @@ Markdown, JSON and a few short shell scripts. No agent code.
 | Permissions and the sandbox | `.claude/settings.json`, `docs/agent/settings-explained.md` | 2 (done) |
 | Hooks: rules the agent can't skip | `.claude/hooks/`, `docs/agent/hooks-testing.md` | 3 (done) |
 | Skills: our know-how, loaded when needed | `.claude/skills/`, `docs/agent/skill-template.md` | 4 (done) |
-| Outside tools for the whole team (MCP) | `.mcp.json` | 5 |
+| Outside tools for the whole team (MCP) | `.mcp.json`, `docs/agent/mcp-servers.md` | 5 (done) |
 | Subagents: a planner, builder, tester, reviewer and security checker | `.claude/agents/` | 6 |
 | One-word workflows, with a spec first | `specs/`, `.claude/skills/` | 7 |
 | Testing the kit itself | `evals/` | 8 |
 | Sharing it as a plugin, and running it on GitHub | `ai-team-kit/`, `.github/workflows/` | 9 |
 
-**Shared (in git):** this folder (with `settings.json`), every `CLAUDE.md`, `docs/agent/`, and later `.mcp.json`.
+**Shared (in git):** this folder (with `settings.json`), every `CLAUDE.md`, `docs/agent/`, and `.mcp.json`.
 **Just for you (never committed):** `~/.claude/CLAUDE.md`, `CLAUDE.local.md` and
 `.claude/settings.local.json`. The last two are in `.gitignore`.
 
@@ -79,3 +79,12 @@ Where know-how goes:
 To write a new one, copy `docs/agent/skill-template.md`, and check it against
 `docs/agent/should-this-be-a-skill.md`. Read every skill you download before you put it here:
 its scripts run with your access. `kit-tests/poisoned-skill/` shows why.
+
+## MCP servers (Episode 5)
+
+`.mcp.json` (in the repo root, next to this folder) connects three outside tools for the whole team:
+`github` (issues and pull requests), `browser` (Playwright) and `db` (read-only SQL on the dev
+database). Tokens come from each person's environment, never from the file: see `.env.example`.
+`settings.json` turns the three on (`enabledMcpjsonServers`) and has a rule for each tool: reading
+is allowed, commenting and opening a pull request ask first, merging is denied. Setup and the
+reasons: `docs/agent/mcp-servers.md`. Before you add a server: `docs/agent/is-this-server-safe.md`.
