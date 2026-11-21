@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +56,24 @@ public class InvoiceService {
     return found.stream()
         .filter(i -> status == null || i.getStatus() == status)
         .map(this::toSummary)
+        .toList();
+  }
+
+  /**
+   * Unpaid invoices past their due date, most late first. Includes SENT ones the nightly job has
+   * not yet marked OVERDUE. Due today counts (as the job does), with 0 days late.
+   */
+  @Transactional(readOnly = true)
+  public List<OverdueInvoice> listOverdue() {
+    LocalDate today = LocalDate.now(clock);
+    return invoices.findByStatusIn(List.of(InvoiceStatus.SENT, InvoiceStatus.OVERDUE)).stream()
+        .filter(i -> !i.getDueDate().isAfter(today))
+        .map(
+            i ->
+                OverdueInvoice.from(
+                    toSummary(i), (int) ChronoUnit.DAYS.between(i.getDueDate(), today)))
+        .filter(o -> o.balanceDue().signum() > 0)
+        .sorted(Comparator.comparingInt(OverdueInvoice::daysLate).reversed())
         .toList();
   }
 

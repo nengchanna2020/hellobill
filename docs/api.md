@@ -13,6 +13,7 @@ form errors: 400 for bad input, 404 when something doesn't exist.
 | GET | `/api/customers/{id}/payments` | payments on a customer's invoices, newest first | `curl localhost:8080/api/customers/1/payments` |
 | GET | `/api/dashboard` | totals for the home page | `curl localhost:8080/api/dashboard` |
 | GET | `/api/invoices` | invoices, newest first (`?status=` and `?customerId=` filter) | `curl localhost:8080/api/invoices?status=SENT` |
+| GET | `/api/invoices/overdue` | unpaid invoices past their due date with `daysLate`, most late first | `curl localhost:8080/api/invoices/overdue` |
 | GET | `/api/invoices/{id}` | one invoice with items and totals | `curl localhost:8080/api/invoices/1` |
 | POST | `/api/invoices` | a draft invoice (201) | `{"customerId": 1, "taxRate": 8, "discountPercent": 0, "items": [...]}` |
 | PUT | `/api/invoices/{id}` | change a draft | same body as POST |

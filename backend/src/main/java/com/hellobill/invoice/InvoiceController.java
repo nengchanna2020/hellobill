@@ -31,6 +31,11 @@ public class InvoiceController {
     return service.list(status, customerId);
   }
 
+  @GetMapping("/overdue")
+  public List<OverdueInvoice> overdue() {
+    return service.listOverdue();
+  }
+
   @GetMapping("/{id}")
   public InvoiceResponse get(@PathVariable Long id) {
     return service.get(id);
