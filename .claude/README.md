@@ -8,7 +8,7 @@ Markdown, JSON and a few short shell scripts. No agent code.
 |---|---|---|
 | Project instructions | `CLAUDE.md`, `frontend/CLAUDE.md`, `backend/CLAUDE.md`, `docs/agent/` | 1 (done) |
 | Permissions and the sandbox | `.claude/settings.json`, `docs/agent/settings-explained.md` | 2 (done) |
-| Hooks: rules the agent can't skip | `.claude/hooks/` | 3 |
+| Hooks: rules the agent can't skip | `.claude/hooks/`, `docs/agent/hooks-testing.md` | 3 (done) |
 | Skills: our know-how, loaded when needed | `.claude/skills/` | 4 |
 | Outside tools for the whole team (MCP) | `.mcp.json` | 5 |
 | Subagents: a planner, builder, tester, reviewer and security checker | `.claude/agents/` | 6 |
@@ -34,3 +34,21 @@ but it can't undo the team's deny or ask rules: a deny from any file wins.
 
 The first time you open the repo in Claude Code, it asks you to trust the folder. The team's
 allow rules only apply after you say yes. The deny and ask rules apply straight away.
+
+## Hooks (Episode 3)
+
+`hooks/` holds small shell scripts, and `settings.json` says when Claude Code runs each one. A
+hook isn't advice like `CLAUDE.md`: it runs every time, whatever the agent thinks.
+
+| Script | When | What it does |
+|---|---|---|
+| `session-context.sh` | the session starts | tells the agent the branch, last commit and open issues |
+| `block-secrets.sh` | before Edit, Write or Bash | says no to secrets in files and to the danger list |
+| `format-on-edit.sh` | after every edit | Prettier or Spotless on that one file |
+| `run-related-tests.sh` | after every edit | that file's tests only, and the failures go back to the agent |
+| `require-green-tests.sh` | the agent wants to stop | CI's checks must pass, or back to work (3 tries at most) |
+
+They need `bash` and `jq`. Every run writes one line to `.claude/hooks.log` (git-ignored), and
+`.claude/state/` (git-ignored) is what they remember during a session. The deny rules in
+`settings.json` stop the agent from editing this folder. To test a hook without the agent, see
+`docs/agent/hooks-testing.md`, or run `bash kit-tests/hooks/test-hooks.sh`.

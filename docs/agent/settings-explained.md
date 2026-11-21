@@ -102,6 +102,34 @@ The excluded Gradle command runs with your full access, and Gradle runs `build.g
 one reason the allow rules let the agent edit `backend/src/` without asking, but not
 `backend/build.gradle`.
 
+## Two more deny rules (Episode 3)
+
+```jsonc
+"Edit(/.claude/hooks/**)",           // the agent never edits its own guards: the hook scripts
+"Edit(/.claude/settings.json)"       // or this file. A person changes them, by hand
+```
+
+## Hooks (Episode 3)
+
+```jsonc
+"hooks": {
+  "SessionStart": [ ... session-context.sh ],        // branch, last commit, open issues
+  "PreToolUse":   [ "Edit|Write|MultiEdit|Bash":     // before a tool runs: can say no
+                    block-secrets.sh ],
+  "PostToolUse":  [ "Edit|Write|MultiEdit":          // after every edit
+                    format-on-edit.sh (timeout 120),
+                    run-related-tests.sh (timeout 300) ],
+  "Stop":         [ require-green-tests.sh (timeout 600) ],  // before the agent finishes
+  "Notification": [ a desktop notification ]          // when Claude Code needs you
+}
+```
+
+Each entry is an event, an optional `matcher` (a tool name, or several with `|`) and the command
+to run. `"$CLAUDE_PROJECT_DIR"` is the repo root, so the hooks work from any folder. `timeout` is
+in seconds. Hooks run on your computer with your access, outside the sandbox, so read every hook
+before you turn it on. What each script does, and how to test one without the agent:
+`.claude/README.md` and `docs/agent/hooks-testing.md`.
+
 ## Your own exceptions
 
 Put them in `.claude/settings.local.json`, which is git-ignored. It can add allow rules for

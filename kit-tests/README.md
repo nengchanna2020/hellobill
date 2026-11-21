@@ -21,3 +21,9 @@ To test your setup:
 
 Then try it with the kit's `settings.json` removed, and compare. Never point this test at a host
 you don't own.
+
+## `hooks/`: test the hooks without the agent (Episode 3)
+
+`bash kit-tests/hooks/test-hooks.sh` sends each hook the same JSON Claude Code would send, and
+checks its answer: a secret in an edit is blocked, `DROP SCHEMA` is blocked, `npm test` is let
+through. It needs `bash` and `jq`, and runs in under a second. Run it after you change a hook.
