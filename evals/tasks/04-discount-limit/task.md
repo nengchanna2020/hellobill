@@ -1,0 +1,1 @@
+In the invoice form's live preview (`previewTotals` in `frontend/src/lib/invoice-math.ts`), a discount above 100% gives a negative total. Treat a discount above 100 as 100, and a discount below 0 as 0.

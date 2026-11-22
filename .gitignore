@@ -33,3 +33,6 @@ CLAUDE.local.md
 
 # Playwright MCP: page snapshots and console logs
 .playwright-mcp/
+
+# evals: run transcripts stay on your machine
+evals/results/*/*.jsonl

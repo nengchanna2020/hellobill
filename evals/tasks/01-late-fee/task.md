@@ -1,0 +1,1 @@
+Add a late fee to HelloBill: a public static method `InvoiceCalculator.lateFee(BigDecimal total, long daysLate)` that returns 2% of the total for each started 30 days late, so from the first day late, and at most 10%. Not late (0 days or less): 0.00. Round like every other amount.

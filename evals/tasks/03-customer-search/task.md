@@ -1,0 +1,1 @@
+`GET /api/customers` should take an optional `search` parameter and return only the customers whose name contains it, ignoring upper and lower case. Without `search`, it returns every customer, as it does today.

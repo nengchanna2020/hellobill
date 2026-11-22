@@ -1,0 +1,1 @@
+When an amount is missing, the invoice pages show "$NaN". Make `formatMoney` in `frontend/src/lib/money.ts` return "–" (an en dash, like the dates do) when the amount is null, undefined, an empty string or not a number. Real amounts, negative ones too, show as before.
