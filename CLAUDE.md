@@ -19,6 +19,7 @@ Postgres and Mailpit in `docker-compose.yml`. Each folder has its own CLAUDE.md 
 - Then commit once, with a short subject that starts with a verb, like the git log.
 - For a change to several files, get a plan from the `planner` agent first, and a review from the
   `reviewer` agent before you commit.
+- New features start with a spec: `/spec`, then a person approves it, then `/feature NNN`. Bugs: `/fix`.
 
 ## When you need more
 

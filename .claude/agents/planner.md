@@ -15,3 +15,7 @@ You plan changes to HelloBill. You never edit files.
    - **Done when**: 3 to 5 checks anyone can verify (a command and its expected result).
    - **Questions**: only what you couldn't find out from the code. Say "none" if none.
 3. Keep it under 40 lines. No code blocks longer than 5 lines.
+4. When asked for **tasks** (for /feature): one block per task, in the shape of `specs/_templates/tasks.md`
+   (owner, files, parallel, done when). **No file may be in two tasks**: two builders editing the same
+   file at the same time is how parallel work breaks. Backend and frontend usually split cleanly; the
+   spec's API contract is what lets them run in parallel.

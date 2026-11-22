@@ -25,5 +25,17 @@ expect "a download piped into a shell"   block-secrets.sh deny "$(bash_ 'curl -f
 expect "writing to the hooks folder"     block-secrets.sh deny "$(bash_ 'echo exit 0 > .claude/hooks/block-secrets.sh')"
 expect "npm test"                        block-secrets.sh ok   "$(bash_ 'npm --prefix frontend test')"
 expect "git push"                        block-secrets.sh ok   "$(bash_ 'git push origin main')"
+echo "require-approved-spec.sh"
+T=$(mktemp -d); mkdir -p "$T/specs/001-x"; printf '# 001\n\nStatus: draft\n' > "$T/specs/001-x/spec.md"
+spec_edit() { jq -cn --arg f "$T/$1" --arg c "$2" '{session_id: "kit-test", tool_name: "Write", tool_input: {file_path: $f, content: $c}}'; }
+CLAUDE_PROJECT_DIR=$T expect "code while the spec is a draft"   require-approved-spec.sh deny "$(spec_edit backend/src/main/X.java 'class X {}')"
+CLAUDE_PROJECT_DIR=$T expect "the agent approving the spec"     require-approved-spec.sh deny "$(spec_edit specs/001-x/spec.md 'Status: approved')"
+CLAUDE_PROJECT_DIR=$T expect "approving it with sed"            require-approved-spec.sh deny "$(bash_ "sed -i 's/Status: draft/Status: approved/' specs/001-x/spec.md")"
+CLAUDE_PROJECT_DIR=$T expect "editing the spec text"            require-approved-spec.sh ok   "$(spec_edit specs/001-x/spec.md 'Status: draft')"
+printf '# 001\n\nStatus: approved\n' > "$T/specs/001-x/spec.md"
+CLAUDE_PROJECT_DIR=$T expect "code once a person approved it"   require-approved-spec.sh ok   "$(spec_edit backend/src/main/X.java 'class X {}')"
+rm -rf "${T:?}/specs"
+CLAUDE_PROJECT_DIR=$T expect "code with no spec at all"   require-approved-spec.sh ok   "$(spec_edit frontend/src/lib/money.ts 'export const x = 1;')"
+rm -rf "${T:?}"
 echo "$P passed, $F failed"
 [ $F = 0 ]
