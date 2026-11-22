@@ -127,3 +127,21 @@ When to use which: `docs/agent/which-pattern.md`.
 evals/run.sh kit` runs every task headless (`claude -p`) on a fresh copy of the repo and writes a
 results table: passed, time, cost, how big the first call was, and which skills loaded. Run it before
 and after you change the kit, and keep a change only if the numbers say so. Details: `evals/README.md`.
+
+## Share it and run it everywhere (Episode 9)
+
+- **The kit as a plugin:** `ai-team-kit/` holds the parts that are the same in every project: the five
+  agents, `/spec`, `/feature`, `/fix`, `/ship-check`, the pull-request skill, and the hooks that block
+  secrets, wait for an approved spec and require green checks. This repo is also the team's
+  marketplace (`.claude-plugin/marketplace.json`). In another project:
+  `claude plugin marketplace add nengchanna2020/hellobill`, then
+  `claude plugin install ai-team-kit@hello-coder --scope project`. Tell the kit your checks in
+  `.claude/checks.json`. Bump `version` in `ai-team-kit/.claude-plugin/plugin.json` for every release.
+- **HelloBill keeps its own copy** in `.claude/`, with the parts only HelloBill needs (its formatter and
+  related-tests hooks, its endpoint and migration skills, the MCP servers, the permission rules).
+- **In CI:** `.github/workflows/agent-fix.yml` runs `/fix` when an issue gets the `agent-fix` label, with
+  a narrow tool list, a turn limit, a spending limit and a 30-minute timeout. The job, not the agent,
+  opens a draft pull request, and a person reviews it. It needs the `ANTHROPIC_API_KEY` secret.
+  Try it first on your machine with `ci/agent-fix-local.sh ISSUE`: the same prompt and limits, a clean
+  environment, and it never pushes.
+- **Building your own:** `docs/agent/build-your-own-ai-team-kit.md`.

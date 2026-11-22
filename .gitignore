@@ -36,3 +36,6 @@ CLAUDE.local.md
 
 # evals: run transcripts stay on your machine
 evals/results/*/*.jsonl
+
+# claude plugin eval results
+ai-team-kit/evals/results/
