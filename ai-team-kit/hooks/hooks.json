@@ -1,0 +1,20 @@
+{
+  "description": "The AI Team Kit's guards: session facts, no secrets or danger commands, no code before an approved spec, and the project's checks before the agent stops.",
+  "hooks": {
+    "SessionStart": [
+      { "hooks": [ { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/session-context.sh" } ] }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|Bash",
+        "hooks": [
+          { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/block-secrets.sh" },
+          { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/require-approved-spec.sh" }
+        ]
+      }
+    ],
+    "Stop": [
+      { "hooks": [ { "type": "command", "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/require-green-tests.sh", "timeout": 600 } ] }
+    ]
+  }
+}

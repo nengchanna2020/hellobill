@@ -1,0 +1,9 @@
+{
+  "name": "ai-team-kit",
+  "version": "1.0.0",
+  "description": "The AI Team Kit from Hello Coder Season 3: five agents (planner, builder, tester, reviewer, security checker), /spec, /feature, /fix, /ship-check and pull-request skills, and hooks that block secrets and require green checks.",
+  "author": { "name": "Hello Coder" },
+  "repository": "https://github.com/nengchanna2020/hellobill",
+  "license": "MIT",
+  "keywords": ["agents", "code-review", "tdd", "specs", "hooks"]
+}

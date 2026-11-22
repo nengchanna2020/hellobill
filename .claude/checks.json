@@ -1,0 +1,6 @@
+{
+  "checks": [
+    { "name": "backend", "when": "backend/", "run": "backend/gradlew -p backend spotlessCheck test" },
+    { "name": "frontend", "when": "frontend/", "run": "cd frontend && npm run -s format:check && npm run -s typecheck && npx vitest run" }
+  ]
+}

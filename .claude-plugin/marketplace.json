@@ -1,0 +1,12 @@
+{
+  "name": "hello-coder",
+  "owner": { "name": "Hello Coder" },
+  "description": "The Hello Coder team's Claude Code plugins.",
+  "plugins": [
+    {
+      "name": "ai-team-kit",
+      "source": "./ai-team-kit",
+      "description": "Agents, skills and hooks for spec-first, test-first work with a reviewer that shows its evidence."
+    }
+  ]
+}
