@@ -15,6 +15,7 @@ export default function RecurringPage() {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [taxRate, setTaxRate] = useState("0");
+  const [autoSend, setAutoSend] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -27,12 +28,23 @@ export default function RecurringPage() {
         description,
         amount: Number(amount),
         taxRate: Number(taxRate),
+        autoSend,
       });
       setDescription("");
       setAmount("");
+      setAutoSend(false);
       await reload();
     } catch (e) {
       setFormError(e instanceof ApiError ? e.message : "Could not save the plan");
+    }
+  }
+
+  async function toggleAutoSend(plan: RecurringPlan) {
+    try {
+      await api.post(`/recurring-plans/${plan.id}/auto-send`, { autoSend: !plan.autoSend });
+      await reload();
+    } catch (e) {
+      setMessage(e instanceof ApiError ? e.message : "Could not change auto-send");
     }
   }
 
@@ -76,6 +88,7 @@ export default function RecurringPage() {
                 <th className="num">Amount</th>
                 <th>Next invoice</th>
                 <th>Status</th>
+                <th>Auto-send</th>
                 <th />
               </tr>
             </thead>
@@ -87,6 +100,17 @@ export default function RecurringPage() {
                   <td className="num">{formatMoney(plan.amount, plan.currency)}</td>
                   <td>{formatDate(plan.nextRunDate)}</td>
                   <td>{plan.active ? "Active" : "Paused"}</td>
+                  <td>
+                    <button
+                      type="button"
+                      className="link"
+                      aria-label={`Auto-send for ${plan.description}`}
+                      aria-pressed={plan.autoSend}
+                      onClick={() => toggleAutoSend(plan)}
+                    >
+                      {plan.autoSend ? "On" : "Off"}
+                    </button>
+                  </td>
                   <td>
                     <button type="button" className="link" onClick={() => toggle(plan)}>
                       {plan.active ? "Pause" : "Resume"}
@@ -137,6 +161,14 @@ export default function RecurringPage() {
               value={taxRate}
               onChange={(e) => setTaxRate(e.target.value)}
             />
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={autoSend}
+              onChange={(e) => setAutoSend(e.target.checked)}
+            />
+            Send automatically
           </label>
           <button type="submit">Add plan</button>
           <ErrorMessage message={formError} />

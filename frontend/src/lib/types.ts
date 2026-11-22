@@ -75,6 +75,7 @@ export interface RecurringPlan {
   amount: number;
   taxRate: number;
   active: boolean;
+  autoSend: boolean;
   nextRunDate: string;
 }
 

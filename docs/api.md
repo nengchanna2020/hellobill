@@ -22,7 +22,8 @@ form errors: 400 for bad input, 404 when something doesn't exist.
 | GET | `/api/invoices/{invoiceId}/payments` | payments for an invoice | `curl localhost:8080/api/invoices/1/payments` |
 | POST | `/api/invoices/{invoiceId}/payments` | record a payment (201) | `{"amount": 100.00, "method": "BANK_TRANSFER"}` |
 | GET | `/api/recurring-plans` | monthly billing plans | `curl localhost:8080/api/recurring-plans` |
-| POST | `/api/recurring-plans` | add a plan (201) | `{"customerId": 1, "description": "Hosting", "amount": 49.00}` |
+| POST | `/api/recurring-plans` | add a plan (201); optional `autoSend` (default false) | `{"customerId": 1, "description": "Hosting", "amount": 49.00, "autoSend": true}` |
 | POST | `/api/recurring-plans/{id}/pause` | pause a plan | |
 | POST | `/api/recurring-plans/{id}/resume` | resume a plan | |
-| POST | `/api/recurring-plans/run` | run monthly billing now | |
+| POST | `/api/recurring-plans/{id}/auto-send` | turn auto-send on or off for a plan; auto-send plans are emailed and `SENT` when billed (404 if unknown, 400 without `autoSend`) | `{"autoSend": true}` |
+| POST | `/api/recurring-plans/run` | run monthly billing now (invoices of auto-send plans come back `SENT`) | |

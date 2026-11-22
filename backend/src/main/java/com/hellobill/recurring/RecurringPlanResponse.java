@@ -12,7 +12,8 @@ public record RecurringPlanResponse(
     BigDecimal amount,
     BigDecimal taxRate,
     boolean active,
-    LocalDate nextRunDate) {
+    LocalDate nextRunDate,
+    boolean autoSend) {
 
   static RecurringPlanResponse from(RecurringPlan p) {
     return new RecurringPlanResponse(
@@ -24,6 +25,7 @@ public record RecurringPlanResponse(
         p.getAmount(),
         p.getTaxRate(),
         p.isActive(),
-        p.getNextRunDate());
+        p.getNextRunDate(),
+        p.isAutoSend());
   }
 }

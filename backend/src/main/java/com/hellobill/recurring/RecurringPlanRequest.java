@@ -17,4 +17,16 @@ public record RecurringPlanRequest(
     @NotBlank @Size(max = 500) String description,
     @NotNull @DecimalMin("0.01") @Digits(integer = 10, fraction = 2) BigDecimal amount,
     @DecimalMin("0.00") @DecimalMax("100.00") BigDecimal taxRate,
-    LocalDate startDate) {}
+    LocalDate startDate,
+    Boolean autoSend) {
+
+  /** A plan without auto-send. */
+  public RecurringPlanRequest(
+      Long customerId,
+      String description,
+      BigDecimal amount,
+      BigDecimal taxRate,
+      LocalDate startDate) {
+    this(customerId, description, amount, taxRate, startDate, null);
+  }
+}

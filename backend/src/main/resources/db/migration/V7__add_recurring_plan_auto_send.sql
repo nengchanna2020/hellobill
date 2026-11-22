@@ -1,0 +1,1 @@
+ALTER TABLE recurring_plans ADD COLUMN auto_send BOOLEAN NOT NULL DEFAULT FALSE;

@@ -43,6 +43,12 @@ public class RecurringPlanController {
     return service.setActive(id, true);
   }
 
+  @PostMapping("/{id}/auto-send")
+  public RecurringPlanResponse autoSend(
+      @PathVariable Long id, @Valid @RequestBody AutoSendRequest request) {
+    return service.setAutoSend(id, request.autoSend());
+  }
+
   /** Runs monthly billing now instead of waiting for 06:00. Handy for demos. */
   @PostMapping("/run")
   public List<InvoiceResponse> runNow() {

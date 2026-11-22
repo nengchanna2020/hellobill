@@ -36,6 +36,10 @@ public class RecurringPlan {
 
   private boolean active = true;
 
+  /** When true, invoices made by this plan are emailed straight away. */
+  @Column(name = "auto_send")
+  private boolean autoSend;
+
   /** The next day this plan creates an invoice. */
   @Column(name = "next_run_date")
   private LocalDate nextRunDate;
@@ -50,12 +54,22 @@ public class RecurringPlan {
       String description,
       BigDecimal amount,
       BigDecimal taxRate,
-      LocalDate nextRunDate) {
+      LocalDate nextRunDate,
+      boolean autoSend) {
     this.customer = customer;
     this.description = description;
     this.amount = amount;
     this.taxRate = taxRate;
     this.nextRunDate = nextRunDate;
+    this.autoSend = autoSend;
+  }
+
+  public boolean isAutoSend() {
+    return autoSend;
+  }
+
+  public void setAutoSend(boolean autoSend) {
+    this.autoSend = autoSend;
   }
 
   public Long getId() {
