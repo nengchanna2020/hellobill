@@ -16,7 +16,9 @@ why; don't skip ahead.
    `plan.md` and `tasks.md` in the spec folder (from `specs/_templates/`).
 3. **Build.** For each task, hand it to a `builder` agent with the spec path, the task, and its files.
    Tasks marked parallel go to separate builders at the same time, each in its own git worktree
-   (`isolation: worktree`). Then bring their changes into this checkout and run every check.
+   (`isolation: worktree`). A worktree starts from the last commit, so it doesn't have the new
+   `plan.md` and `tasks.md`: give each builder their full paths in this checkout.
+   Then bring their changes into this checkout and run every check.
    - **Check: green.** All checks for every changed folder pass. If not, send the failure back to
      the builder that owns the file, once. Still red: stop.
 4. **Test.** Ask the `tester` agent to write a test for each acceptance criterion that isn't covered,

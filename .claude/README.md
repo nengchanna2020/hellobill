@@ -12,7 +12,7 @@ Markdown, JSON and a few short shell scripts. No agent code.
 | Skills: our know-how, loaded when needed | `.claude/skills/`, `docs/agent/skill-template.md` | 4 (done) |
 | Outside tools for the whole team (MCP) | `.mcp.json`, `docs/agent/mcp-servers.md` | 5 (done) |
 | Subagents: a planner, builder, tester, reviewer and security checker | `.claude/agents/` | 6 (done) |
-| One-word workflows, with a spec first | `specs/`, `.claude/skills/` | 7 |
+| One-word workflows, with a spec first | `specs/`, `.claude/skills/` | 7 (done) |
 | Testing the kit itself | `evals/` | 8 |
 | Sharing it as a plugin, and running it on GitHub | `ai-team-kit/`, `.github/workflows/` | 9 |
 
@@ -105,4 +105,19 @@ short result back. Each helper starts with a fresh context, so the brief must sa
 
 The reviewer can't approve without quoting the check results, and flags only real problems. To add
 one: `docs/agent/subagent-template.md` and `docs/agent/one-job-per-agent.md`.
+
+## Workflows: /spec, /feature and /fix (Episode 7)
+
+Three skills you type run the team in order, with a check between each step:
+
+- `/spec <idea>` asks a few questions, then writes `specs/NNN-name/spec.md` with acceptance criteria and
+  the API contract. It stays `Status: draft` until a person changes that line.
+- `/feature NNN` checks the spec is approved, gets a plan and tasks from the planner, builds the tasks
+  (in parallel, in git worktrees, when they share no files), has the tester and the reviewer check
+  it, commits, and writes the pull request description. A person opens and merges the pull request.
+- `/fix <bug>` writes a failing test first, then the fix, then a review.
+
+`hooks/require-approved-spec.sh` blocks code edits while the newest spec isn't approved, and blocks
+the agent from approving a spec itself. `specs/constitution.md` holds the principles every step checks.
+When to use which: `docs/agent/which-pattern.md`.
 
