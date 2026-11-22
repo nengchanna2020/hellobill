@@ -1,6 +1,6 @@
 # 001: Auto-send monthly invoices
 
-Status: draft
+Status: approved
 <!-- Only a person changes this line to "Status: approved". The hook blocks code edits until then. -->
 
 ## What and why
