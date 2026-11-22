@@ -13,7 +13,7 @@ TASKS=${*:-$(ls "$EV/tasks")}
 OUT=$EV/results/${RESULTS_NAME:-$(date +%Y%m%d)-$SETUP}; mkdir -p "$OUT"
 S=$(realpath "${SETTINGS:-$EV/eval-settings.json}")
 W=${EVAL_WORK:-/tmp/hellobill-eval}/hellobill            # the same path every time, so it's trusted once
-[ -f "$OUT/results.csv" ] || echo "task,passed,seconds,cost_usd,turns,first_call_tokens,skills,agents,test_files_changed" > "$OUT/results.csv"
+[ -f "$OUT/results.csv" ] || echo "task,passed,seconds,cost_usd,turns,first_call_tokens,skills,agents,test_lines" > "$OUT/results.csv"
 for t in $TASKS; do
   rm -rf "$W"; mkdir -p "$W"
   git -C "$ROOT" archive HEAD | tar -x -C "$W"
@@ -26,11 +26,12 @@ for t in $TASKS; do
   (cd "$W" && timeout "${TMO:-1500}" claude -p "$(cat "$EV/tasks/$t/task.md")" --settings "$S" ${MODEL:+--model "$MODEL"} \
      --output-format stream-json --verbose < /dev/null > "$OUT/$t.jsonl" 2>&1)
   secs=$(( $(date +%s) - start ))
-  # Did the agent change or delete a test that was already there? (Adding new tests is fine.)
-  changed=$(cd "$W" && git add -A >/dev/null 2>&1; git diff --cached --name-status HEAD | awk '$1!="A" && ($2 ~ /src\/test\// || $2 ~ /\.test\.tsx?$/) {print $2}' | tr '\n' ' ')
+  # Test lines added and removed, against the start (the agent may have committed): "+40 -0" is good,
+  # lines removed from tests that were already there are worth a look.
+  tests=$(cd "$W" && git add -A >/dev/null 2>&1; git diff --cached --numstat "$(git rev-list --max-parents=0 HEAD)" | awk '$3 ~ /src\/test\// || $3 ~ /\.test\.tsx?$/ {a+=$1; d+=$2} END {printf "+%d -%d", a, d}')
   cp -r "$EV/tasks/$t/check/." "$W/"
   (cd "$W" && bash "$EV/tasks/$t/check.sh") > "$OUT/$t.check" 2>&1 && passed=yes || passed=no
-  python3 "$EV/report.py" row "$OUT/$t.jsonl" "$t" "$passed" "$secs" "${changed:-none}" >> "$OUT/results.csv"
+  python3 "$EV/report.py" row "$OUT/$t.jsonl" "$t" "$passed" "$secs" "$tests" >> "$OUT/results.csv"
   tail -1 "$OUT/results.csv"
 done
 python3 "$EV/report.py" table "$OUT/results.csv" > "$OUT/results.md"

@@ -13,7 +13,7 @@ Markdown, JSON and a few short shell scripts. No agent code.
 | Outside tools for the whole team (MCP) | `.mcp.json`, `docs/agent/mcp-servers.md` | 5 (done) |
 | Subagents: a planner, builder, tester, reviewer and security checker | `.claude/agents/` | 6 (done) |
 | One-word workflows, with a spec first | `specs/`, `.claude/skills/` | 7 (done) |
-| Testing the kit itself | `evals/` | 8 |
+| Testing the kit itself | `evals/` | 8 (done) |
 | Sharing it as a plugin, and running it on GitHub | `ai-team-kit/`, `.github/workflows/` | 9 |
 
 **Shared (in git):** this folder (with `settings.json`), every `CLAUDE.md`, `docs/agent/`, and `.mcp.json`.
@@ -121,3 +121,9 @@ Three skills you type run the team in order, with a check between each step:
 the agent from approving a spec itself. `specs/constitution.md` holds the principles every step checks.
 When to use which: `docs/agent/which-pattern.md`.
 
+## Testing the kit: evals/ (Episode 8)
+
+`evals/` is a small test set for the kit itself: HelloBill tasks, each with a hidden check. `bash
+evals/run.sh kit` runs every task headless (`claude -p`) on a fresh copy of the repo and writes a
+results table: passed, time, cost, how big the first call was, and which skills loaded. Run it before
+and after you change the kit, and keep a change only if the numbers say so. Details: `evals/README.md`.

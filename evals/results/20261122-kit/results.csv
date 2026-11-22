@@ -1,0 +1,8 @@
+task,passed,seconds,cost_usd,turns,first_call_tokens,skills,agents,test_lines
+01-late-fee,yes,141,0.2114,2,37974,none,reviewer,+37 -0
+02-missing-amount,yes,31,0.1080,8,37986,none,none,+20 -0
+03-customer-search,yes,167,0.2083,3,37928,none,reviewer,+25 -0
+04-discount-limit,yes,45,0.1625,2,37950,none,reviewer,+13 -0
+05-price-limit,yes,214,0.2226,4,37935,none,reviewer,+30 -0
+06-bad-date,yes,30,0.0965,8,37952,none,none,+18 -0
+07-late-fee-given-test,no,13,0.0702,3,38031,none,none,+0 -0
