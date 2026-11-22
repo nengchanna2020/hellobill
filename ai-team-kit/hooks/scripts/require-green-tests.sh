@@ -15,14 +15,14 @@ if [ -z "$CHANGED" ]; then log "no changes" ""; exit 0; fi
 TREE=$(GIT_INDEX_FILE="$STATE/index" bash -c 'git read-tree HEAD && git add -A && git write-tree')
 if [ -f "$STATE/green-$TREE" ]; then log "already green" ""; exit 0; fi
 lock; OUT=""; FAIL=""; RAN=""
-while IFS=$'\t' read -r name when run; do
+while IFS=$'\x1f' read -r name when run; do
   grep -q "^$when" <<<"$CHANGED" || continue
   RAN="$RAN $name"
   o=$(bash -c "$run" 2>&1) || FAIL="$FAIL $name"
   OUT="$OUT
 == $name: $run ==
 $(grep -vE '^\s*$' <<<"$o" | tail -25)"
-done < <(jq -r '.checks[] | [.name, (.when // ""), .run] | @tsv' "$CHECKS")
+done < <(jq -r '.checks[] | [.name, (.when // ""), .run] | join("\u001f")' "$CHECKS")
 if [ -z "$RAN" ]; then log "nothing to check" ""; exit 0; fi
 if [ -z "$FAIL" ]; then
   touch "$STATE/green-$TREE"; rm -f "$TRIES_FILE"; log passed "${RAN# }"
