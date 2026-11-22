@@ -61,7 +61,8 @@ public class InvoiceService {
 
   /**
    * Unpaid invoices past their due date, most late first. Includes SENT ones the nightly job has
-   * not yet marked OVERDUE. Due today counts (as the job does), with 0 days late.
+   * not yet marked OVERDUE. Due today counts here, with 0 days late, though the job only marks it
+   * OVERDUE the day after.
    */
   @Transactional(readOnly = true)
   public List<OverdueInvoice> listOverdue() {
